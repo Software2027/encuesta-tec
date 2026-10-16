@@ -1,0 +1,104 @@
+{% extends 'encuestas/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Estadístico - {{ EVENTO_NOMBRE }}{% endblock %}
+
+{% block content %}
+<div id="dashboard-app" style="width: 100%; max-width: 1050px; margin: 0 auto;">
+    
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: #ffffff;">Dashboard de Estadísticas en Tiempo Real</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem;">Análisis de resultados de la {{ EVENTO_NOMBRE }}</p>
+        </div>
+        <a href="{% url 'admin:index' %}" class="btn btn-secondary" target="_blank">
+            Ir al Panel Administrador
+        </a>
+    </div>
+
+    <!-- KPIs Row -->
+    <div class="dashboard-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" id="kpi-total">0</div>
+                <div class="kpi-label">Encuestas Completadas</div>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" id="kpi-promedio">0.0 / 5</div>
+                <div class="kpi-label">Promedio de Satisfacción</div>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" id="kpi-comentarios">0</div>
+                <div class="kpi-label">Comentarios / Sugerencias</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+        <div class="chart-card">
+            <h3 class="chart-title">Distribución General de Satisfacción</h3>
+            <canvas id="chart-satisfaccion" height="220"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3 class="chart-title">Promedio de Calificación por Pregunta</h3>
+            <canvas id="chart-preguntas" height="220"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabla de Comentarios Recientes -->
+    <div class="chart-card">
+        <h3 class="chart-title">Comentarios y Sugerencias Recientes</h3>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #e2e8f0; color: var(--text-muted);">
+                        <th style="padding: 10px;">Fecha</th>
+                        <th style="padding: 10px;">Participante</th>
+                        <th style="padding: 10px;">Pregunta</th>
+                        <th style="padding: 10px;">Comentario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comentario in comentarios %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 10px; color: var(--text-muted);">{{ comentario.encuesta.fecha_envio|date:"d/m/Y H:i" }}</td>
+                        <td style="padding: 10px; font-weight: 600;">{{ comentario.encuesta.nombre_participante }}</td>
+                        <td style="padding: 10px; color: var(--accent-teal);">{{ comentario.pregunta.enunciado|truncatechars:40 }}</td>
+                        <td style="padding: 10px;">{{ comentario.valor_texto }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 20px; text-align: center; color: var(--text-muted);">
+                            Aún no se han recibido comentarios de texto.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'encuestas/js/dashboard.js' %}"></script>
+{% endblock %}

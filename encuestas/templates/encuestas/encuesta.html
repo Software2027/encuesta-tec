@@ -1,0 +1,141 @@
+{% extends 'encuestas/base.html' %}
+{% load static %}
+
+{% block title %}Tótem de Satisfacción - {{ EVENTO_NOMBRE }}{% endblock %}
+
+{% block content %}
+<div class="totem-card">
+    
+    <!-- Título con Subrayado Animado Tech -->
+    <div class="title-container">
+        <h2 class="totem-headline">¿Cómo fue tu experiencia en la Edición IV TEC?</h2>
+        <div class="title-underline"></div>
+    </div>
+
+    <!-- Subtítulo con Ícono Pointer Animado -->
+    <div class="totem-subheadline-wrapper">
+        <svg class="pointer-icon-anim" viewBox="0 0 24 24">
+            <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74a4 4 0 1 1-5 0z"/>
+            <path d="M12 2a1 1 0 0 1 1 1v6.24a2.5 2.5 0 1 0-2 0V3a1 1 0 0 1 1-1z"/>
+            <path d="M7 13.5a1.5 1.5 0 0 1 3 0v1.5a.5.5 0 0 0 1 0v-6a1.5 1.5 0 0 1 3 0v4.5a.5.5 0 0 0 1 0v-3a1.5 1.5 0 0 1 3 0v4.25a6.75 6.75 0 0 1-11.5 4.77"/>
+        </svg>
+        <p class="totem-subheadline">Toca una carita para dejarnos tu opinión sobre el evento</p>
+    </div>
+
+    <!-- 3 TARJETAS DE CARITAS CLÁSICAS (😀, 🙂, 😞) -->
+    <div class="totem-caritas-container">
+        
+        <!-- 1. MUY SATISFECHO (😀 / 😄) -->
+        <div class="totem-carita-card" data-valor="3" data-label="Muy Satisfecho" role="button" tabindex="0">
+            <div class="card-tech-badge">🚀 Excelente</div>
+            <div class="card-check-anim">✓</div>
+            <div class="carita-aura-glow"></div>
+            
+            <div class="carita-emoji-wrapper">
+                <span class="emoji-display">😀</span>
+            </div>
+            
+            <span class="totem-carita-label">Muy Satisfecho</span>
+        </div>
+
+        <!-- 2. SATISFECHO (🙂) -->
+        <div class="totem-carita-card" data-valor="2" data-label="Satisfecho" role="button" tabindex="0">
+            <div class="card-tech-badge">✨ Buena</div>
+            <div class="card-check-anim">✓</div>
+            <div class="carita-aura-glow"></div>
+            
+            <div class="carita-emoji-wrapper">
+                <span class="emoji-display">🙂</span>
+            </div>
+            
+            <span class="totem-carita-label">Satisfecho</span>
+        </div>
+
+        <!-- 3. POCO SATISFECHO (😞 / ☹️) -->
+        <div class="totem-carita-card" data-valor="1" data-label="Poco Satisfecho" role="button" tabindex="0">
+            <div class="card-tech-badge">💡 Mejorable</div>
+            <div class="card-check-anim">✓</div>
+            <div class="carita-aura-glow"></div>
+            
+            <div class="carita-emoji-wrapper">
+                <span class="emoji-display">😞</span>
+            </div>
+            
+            <span class="totem-carita-label">Poco Satisfecho</span>
+        </div>
+
+    </div>
+
+    <!-- HINT Y BARRA DE PASO -->
+    <div class="totem-footer-info">
+        <div class="step-indicator-badge">Paso 1 de 2</div>
+        <div class="touch-hint-wrapper">
+            <span>Toca para elegir</span>
+            <svg class="hint-arrow" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL / POP-UP TÁCTIL INTERACTIVO -->
+<div class="modal-overlay" id="modal-totem">
+    <div class="modal-content">
+        <button type="button" class="btn-totem-close" id="btn-modal-close" aria-label="Cerrar">&times;</button>
+        
+        <div class="modal-header-icon" id="modal-icon-bg">
+            <img src="{% static 'encuestas/img/logo_iso_municipalidad.png' %}" alt="Municipalidad de Malagueño" class="modal-iso-img">
+        </div>
+
+        <h3 class="modal-title" id="modal-title-text">¡Gracias por tu valoración!</h3>
+        <p class="modal-subtitle" id="modal-subtitle-text">Selecciona los aspectos clave de tu experiencia (opcional):</p>
+
+        <!-- Formulario Pop-up -->
+        <form id="totem-form">
+            {% csrf_token %}
+            <input type="hidden" id="selected-pregunta-id" value="{{ pregunta_principal.id|default:'1' }}">
+            <input type="hidden" id="selected-valor-numerico" value="">
+
+            <div class="touch-options-grid">
+                {% if opciones %}
+                    {% for opcion in opciones %}
+                    <button type="button" class="touch-pill" data-opcion-id="{{ opcion.id }}">
+                        {{ opcion.texto }}
+                    </button>
+                    {% endfor %}
+                {% else %}
+                    <button type="button" class="touch-pill" data-opcion-id="1">Organización y Atención</button>
+                    <button type="button" class="touch-pill" data-opcion-id="2">Calidad de Charlas y Talleres</button>
+                    <button type="button" class="touch-pill" data-opcion-id="3">Instalaciones y Climatización</button>
+                    <button type="button" class="touch-pill" data-opcion-id="4">Stands Tecnológicos e Innovación</button>
+                    <button type="button" class="touch-pill" data-opcion-id="5">Acreditación Ágil</button>
+                    <button type="button" class="touch-pill" data-opcion-id="6">Conectividad / WiFi</button>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-totem-submit" id="btn-confirm-survey">
+                Confirmar y Enviar Encuesta
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- OVERLAY AGRADECIMIENTO Y AUTO-RESET EN 4s -->
+<div class="thanks-overlay" id="thanks-overlay">
+    <div class="thanks-icon-large">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+    <h2 class="thanks-title-large">¡Muchas Gracias por tu Opinión!</h2>
+    <p class="thanks-subtitle-large">Tu respuesta nos ayuda a seguir innovando en Malagueño.</p>
+    <div class="reset-timer-badge">
+        Esta pantalla se reiniciará en <span id="reset-counter">4</span>s...
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'encuestas/js/totem.js' %}"></script>
+{% endblock %}

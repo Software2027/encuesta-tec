@@ -1,0 +1,39 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Python / Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Migraciones de Django (ignora todo menos __init__.py presentes y futuros)
+*/migrations/*
+!*/migrations/__init__.py
+**/migrations/*
+!**/migrations/__init__.py
+
+# Base de datos local
+*.sqlite3
+db.sqlite3
+
+# Variables de entorno y credenciales
+.env
+local_settings.py
+
+# Archivos de logs
+*.log
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store

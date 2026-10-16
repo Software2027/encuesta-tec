@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Tótem de Satisfacción - Edición IV TEG Tecnología e Innovación Malagueño">
+    <title>{% block title %}{{ EVENTO_NOMBRE }}{% endblock %}</title>
+
+    <!-- Favicon Oficial de la Municipalidad -->
+    <link rel="icon" type="image/png" href="{% static 'encuestas/img/logo_iso_municipalidad.png' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'encuestas/img/logo_iso_municipalidad.png' %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles Tech Premium -->
+    <link rel="stylesheet" href="{% static 'encuestas/css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- CAPAS DE FONDO VIVO (Grid Digital, Orbes Aurora & Partículas) -->
+    <div class="tech-bg-grid"></div>
+    <div class="aurora-orb aurora-orb-1"></div>
+    <div class="aurora-orb aurora-orb-2"></div>
+    <div class="aurora-orb aurora-orb-3"></div>
+    <div id="particles-container"></div>
+
+    <!-- HEADER INSTITUCIONAL CON LOGOS Y SCANLINE ANIMADO -->
+    <header class="header-totem">
+        <div class="header-totem-container">
+            
+            <!-- Logos Izquierda: Logo TEG (Evento) + Divider + Logo Modernización (Área) -->
+            <div class="brand-logos-left">
+                <img src="{% static 'encuestas/img/logo_tec.png' %}" alt="Logo TEG IV" class="logo-img-event">
+                <div class="header-divider"></div>
+                <img src="{% static 'encuestas/img/logo_modernizacion.png' %}" alt="Logo Modernización e Innovación" class="logo-img-area">
+            </div>
+
+            <!-- Logo Derecha: Municipalidad de Malagueño -->
+            <div class="brand-logo-right">
+                <img src="{% static 'encuestas/img/logo_muni_blanco.png' %}" alt="Municipalidad de Malagueño" class="logo-img-muni">
+            </div>
+
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL DE TÓTEM -->
+    <main class="totem-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER INSTITUCIONAL -->
+    <footer class="footer-totem">
+        <p>&copy; 2026 {{ EVENTO_AREA }} — <strong>{{ EVENTO_LEMA }}</strong></p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

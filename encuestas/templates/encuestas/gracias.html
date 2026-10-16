@@ -1,0 +1,26 @@
+{% extends 'encuestas/base.html' %}
+
+{% block title %}¡Gracias por participar! - {{ EVENTO_NOMBRE }}{% endblock %}
+
+{% block content %}
+<div class="survey-card thanks-container">
+    <div class="thanks-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+    </div>
+
+    <h2 class="thanks-title">¡Muchas Gracias por tu participación!</h2>
+    <p class="thanks-text">
+        Tus respuestas y sugerencias han sido registradas exitosamente. El equipo de la <strong>{{ EVENTO_AREA }}</strong> analizará tu feedback para continuar haciendo del evento TEG una experiencia de vanguardia.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 12px;">
+        <a href="{% url 'encuesta_publica' %}" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Realizar otra respuesta
+        </a>
+    </div>
+</div>
+{% endblock %}

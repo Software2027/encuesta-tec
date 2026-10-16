@@ -1,0 +1,225 @@
+{% extends 'encuestas/base.html' %}
+{% load static %}
+
+{% block title %}Resultados en Tiempo Real - {{ EVENTO_NOMBRE }}{% endblock %}
+
+{% block content %}
+<div class="resultados-container">
+    
+    <!-- Encabezado de la Sección de Resultados -->
+    <div class="resultados-header">
+        <h2 class="resultados-title">
+            📊 Reporte de Resultados del Evento TEC IV
+        </h2>
+        <p class="resultados-subtitle">
+            Estadísticas consolidadas de votos recibidos en el Tótem Táctil
+        </p>
+    </div>
+
+    <!-- TARJETAS KPI DE MÉTRICAS GENERALES -->
+    <div class="results-kpi-grid">
+        
+        <!-- Total Votos -->
+        <div class="results-kpi-card">
+            <div class="results-kpi-icon" style="background: #e0f2fe; color: var(--primary-blue);">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+                <div class="results-kpi-number" style="color: var(--primary-blue);">{{ total_votos }}</div>
+                <div class="results-kpi-label">Votos Registrados</div>
+            </div>
+        </div>
+
+        <!-- Muy Satisfecho -->
+        <div class="results-kpi-card">
+            <div class="results-kpi-icon" style="background: #dcfce7; color: #15803d;">
+                😀
+            </div>
+            <div>
+                <div class="results-kpi-number" style="color: #15803d;">{{ muy_satisfecho_cnt }}</div>
+                <div class="results-kpi-label">Muy Satisfecho ({% if total_votos %}{% widthratio muy_satisfecho_cnt total_votos 100 %}{% else %}0{% endif %}%)</div>
+            </div>
+        </div>
+
+        <!-- Satisfecho -->
+        <div class="results-kpi-card">
+            <div class="results-kpi-icon" style="background: #e0f2fe; color: #1d4ed8;">
+                🙂
+            </div>
+            <div>
+                <div class="results-kpi-number" style="color: #1d4ed8;">{{ satisfecho_cnt }}</div>
+                <div class="results-kpi-label">Satisfecho ({% if total_votos %}{% widthratio satisfecho_cnt total_votos 100 %}{% else %}0{% endif %}%)</div>
+            </div>
+        </div>
+
+        <!-- Poco Satisfecho -->
+        <div class="results-kpi-card">
+            <div class="results-kpi-icon" style="background: #fee2e2; color: #b91c1c;">
+                😞
+            </div>
+            <div>
+                <div class="results-kpi-number" style="color: #b91c1c;">{{ poco_satisfecho_cnt }}</div>
+                <div class="results-kpi-label">Poco Satisfecho ({% if total_votos %}{% widthratio poco_satisfecho_cnt total_votos 100 %}{% else %}0{% endif %}%)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TÍTULO SECCIÓN DESGLOSE POR ESTADO -->
+    <h3 class="results-section-title">
+        📌 Aspectos Destacados por Calificación
+    </h3>
+
+    <!-- GRID DE 3 COLUMNAS SEPARADAS POR ESTADO -->
+    <div class="results-breakdown-grid">
+        
+        <!-- Tarjeta 1: Muy Satisfecho (Verde) -->
+        <div class="results-state-card muy-satisfecho">
+            <div class="state-header">
+                <h4 class="state-title" style="color: #15803d;">
+                    😀 Muy Satisfecho
+                </h4>
+                <span class="state-badge" style="background: #dcfce7; color: #15803d;">
+                    {{ muy_satisfecho_cnt }} votos
+                </span>
+            </div>
+            <p class="state-desc">Factores más valorados en esta categoría:</p>
+
+            <ul class="state-options-list">
+                {% for item in opciones_muy_satisfecho %}
+                <li class="state-option-item">
+                    <span class="state-option-name">{{ item.texto }}</span>
+                    <span class="state-option-votes" style="background: #dcfce7; color: #15803d;">
+                        {{ item.menciones }} menciones
+                    </span>
+                </li>
+                {% empty %}
+                <li style="color: var(--text-muted); padding: 12px 0; text-align: center; font-size: 0.9rem;">Sin menciones registradas.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Tarjeta 2: Satisfecho (Azul) -->
+        <div class="results-state-card satisfecho">
+            <div class="state-header">
+                <h4 class="state-title" style="color: #1d4ed8;">
+                    🙂 Satisfecho
+                </h4>
+                <span class="state-badge" style="background: #e0f2fe; color: #1d4ed8;">
+                    {{ satisfecho_cnt }} votos
+                </span>
+            </div>
+            <p class="state-desc">Factores más seleccionados en esta categoría:</p>
+
+            <ul class="state-options-list">
+                {% for item in opciones_satisfecho %}
+                <li class="state-option-item">
+                    <span class="state-option-name">{{ item.texto }}</span>
+                    <span class="state-option-votes" style="background: #e0f2fe; color: #1d4ed8;">
+                        {{ item.menciones }} menciones
+                    </span>
+                </li>
+                {% empty %}
+                <li style="color: var(--text-muted); padding: 12px 0; text-align: center; font-size: 0.9rem;">Sin menciones registradas.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Tarjeta 3: Poco Satisfecho (Rojo) -->
+        <div class="results-state-card poco-satisfecho">
+            <div class="state-header">
+                <h4 class="state-title" style="color: #b91c1c;">
+                    😞 Poco Satisfecho
+                </h4>
+                <span class="state-badge" style="background: #fee2e2; color: #b91c1c;">
+                    {{ poco_satisfecho_cnt }} votos
+                </span>
+            </div>
+            <p class="state-desc">Aspectos a mejorar señalados por los asistentes:</p>
+
+            <ul class="state-options-list">
+                {% for item in opciones_poco_satisfecho %}
+                <li class="state-option-item">
+                    <span class="state-option-name">{{ item.texto }}</span>
+                    <span class="state-option-votes" style="background: #fee2e2; color: #b91c1c;">
+                        {{ item.menciones }} menciones
+                    </span>
+                </li>
+                {% empty %}
+                <li style="color: var(--text-muted); padding: 12px 0; text-align: center; font-size: 0.9rem;">Sin menciones registradas.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- SECCIÓN 2: TABLA DE LAS OPCIONES MÁS SELECCIONADAS (RANKING GLOBAL) -->
+    <div class="ranking-table-card">
+        <h3 class="ranking-table-title">
+            🏆 Tabla de Opciones Más Seleccionadas en el Pop-up
+        </h3>
+        <p class="ranking-table-subtitle">
+            Ranking consolidado de todas las temáticas y características votadas por los asistentes al evento TEG IV
+        </p>
+
+        <div class="table-scroll-hint">
+            ⇄ Desliza horizontalmente para ver la tabla completa
+        </div>
+
+        <div class="table-responsive-wrapper">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;"># Posición</th>
+                        <th style="width: 40%;">Opción / Característica</th>
+                        <th style="width: 20%;">Total Menciones</th>
+                        <th style="width: 28%;">Porcentaje / Barra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for op in opciones_ranking %}
+                    <tr>
+                        <td class="rank-number">
+                            #{{ forloop.counter }}
+                        </td>
+                        <td style="font-weight: 700;">
+                            {{ op.texto }}
+                        </td>
+                        <td style="font-weight: 800; color: var(--primary-blue);">
+                            {{ op.total_menciones }} votos
+                        </td>
+                        <td>
+                            {% if total_votos %}
+                                {% widthratio op.total_menciones total_votos 100 as pct %}
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="progress-pct-bar">
+                                        <div class="progress-pct-fill" style="width: {{ pct }}%;"></div>
+                                    </div>
+                                    <span style="font-weight: 800; font-size: 0.9rem; color: var(--accent-dark-green); min-width: 42px;">{{ pct }}%</span>
+                                </div>
+                            {% else %}
+                                <span style="color: var(--text-muted);">0%</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 24px; text-align: center; color: var(--text-muted);">
+                            No hay datos de opciones seleccionadas aún.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Botón para regresar al tótem -->
+    <div style="text-align: center; margin: 3rem 0;">
+        <a href="{% url 'encuesta_publica' %}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 16px 32px; text-decoration: none; font-size: 1.05rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Volver al Tótem Táctil
+        </a>
+    </div>
+
+</div>
+{% endblock %}
