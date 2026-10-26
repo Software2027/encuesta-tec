@@ -42,10 +42,8 @@ class Command(BaseCommand):
         opciones_totem = [
             'Organización y Atención',
             'Calidad de Charlas y Talleres',
-            'Instalaciones y Climatización',
-            'Stands Tecnológicos e Innovación',
-            'Acreditación Ágil',
-            'Conectividad / WiFi'
+            'Instalaciones',
+            'Stands Tecnológicos e Innovación'
         ]
 
         preg_totem.opciones.all().delete()
